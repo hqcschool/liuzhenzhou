@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>11</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      #tab {
+        width: 1200px;
+        text-align: center;
+      }
+      tr th,
+      td {
+        padding: 5px 0;
+      }
+      tr th:nth-child(1) input {
+        vertical-align: middle;
+      }
+      .even {
+        background-color: #eef11c;
+      }
+
+      .odd {
+        background-color: #ee710b;
+      }
+      .hovered {
+        background-color: rgb(239, 67, 4);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <input type="text" value="名" v-model="valname" />
+      <select name="" id="" v-model="sel">
+        <option value="请选择一种性别">请选择一种性别</option>
+        <option :value="1" :selected="sel === '1'">男</option>
+        <option :value="2" :selected="sel === '2'">女</option>
+      </select>
+      <input type="text" v-model="ages" />
+      <input @click.prevent="btnadd" type="submit" value="提交" /><br /><br />
+      <select name="" id="" v-model="field">
+        <option value="请选择一排序字段">请选择一排序字段</option>
+        <option :value="1">编号</option>
+        <option :value="2">年龄</option>
+      </select>
+      <select name="" id="" v-model="sort_list">
+        <option value="请选择一排序方式">请选择一排序方式</option>
+        <option :value="1">升序</option>
+        <option :value="2">降序</option>
+      </select>
+      <button @click="sorts">排序</button><br /><br />
+      <table border="1" id="tab">
+        <thead>
+          <tr>
+            <th>
+              全选
+              <input type="checkbox" @change="checKll" v-model="chec_all" />
+            </th>
+            <th>编号</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>年龄</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(item,index) in items"
+            :key="item.id"
+            :class="{even: index % 2 === 0, odd: index % 2 !== 0 }"
+            :class="{hovered:ishovered}"
+            @mouseover="setHovered(item, true)"
+            @mouseout="setHovered(item, false)"
+          >
+            <td>
+              <input
+                type="checkbox"
+                name=""
+                id=""
+                v-model="item.state"
+                @change="upAll"
+              />
+            </td>
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.sex==2?'女':'男'}}</td>
+            <td>{{item.age}}</td>
+            <td>
+              <button @click="btnup(index)">上移</button>
+              <button @click="btndown(index)">下移</button>
+              <button @click="btndel(index)">删除</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script src="../common/vue.js"></script>
+    <script>
+      let showList = [
+        {
+          id: 1,
+          name: "小明",
+          sex: 1,
+          age: "11",
+          state: false,
+        },
+        {
+          id: 2,
+          name: "西吧",
+          sex: 1,
+          age: "18",
+          state: false,
+        },
+        {
+          id: 3,
+          name: "小黑",
+          sex: 2,
+          age: "15",
+          state: false,
+        },
+      ];
+      let vm = new Vue({
+        el: "#app",
+        data: {
+          che_state: "",
+          ishovered: false,
+          sel: "请选择一种性别",
+          field: "请选择一排序字段",
+          sort_list: "请选择一排序方式",
+          valname: "",
+          ages: "100",
+          chec_all: false,
+          items: showList,
+        },
+        methods: {
+          btnadd() {
+            let res = {
+              id: this.items.length + 1,
+              name: this.valname,
+              sex: this.sel,
+              age: this.ages,
+            };
+            this.items.push(res);
+          },
+          btndel(index) {
+            this.items.splice(index, 1);
+          },
+          checKll() {
+            for (let item of this.items) {
+              item.state = this.chec_all;
+            }
+          },
+          upAll() {
+            this.chec_all = this.items.every((item) => item.state);
+          },
+          sorts() {
+            if (this.field == 1) {
+              this.sort_list == 1
+                ? this.items.sort((a, b) => b.id - a.id)
+                : this.items.sort((a, b) => a.id - b.id);
+            } else if (this.field == 2) {
+              this.sort_list == 1
+                ? this.items.sort((a, b) => b.age - a.age)
+                : this.items.sort((a, b) => a.age - b.age);
+            }
+            console.log(this.sort_list);
+          },
+          btnup(index) {
+            console.log(index);
+            if (index > 0) {
+              const temp = this.items[index];
+              this.items.splice(index, 1);
+              this.items.splice(index - 1, 0, temp);
+            }
+          },
+          btndown(index) {
+            if (index < this.items.length - 1) {
+              const temp = this.items[index];
+              this.items.splice(index, 1);
+              this.items.splice(index + 1, 0, temp);
+            }
+          },
+          setHovered(item, value) {
+            item.hovered = value;
+            console.log(this.ishovered);
+            if (item.hovered == true) {
+              this.ishovered = true;
+            } else {
+              this.ishovered = false;
+            }
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
