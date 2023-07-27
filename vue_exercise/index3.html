@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>增删改查</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      table {
+        width: 600px;
+        height: 200px;
+        border-collapse: collapse;
+        text-align: center;
+      }
+      thead tr th {
+        padding: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <form action="#">
+        姓名：<input type="text" v-model="valname" /> 性别：<input
+          type="text"
+          v-model="valsex"
+        />
+        <input type="submit" value="添加" @click.prevent="btnadd" />
+        <button @click.prevent="btnuta(index)">修改</button>
+      </form>
+      <input
+        type="text"
+        v-model="search"
+        @keyup.enter="handleEnter"
+        placeholder="搜索"
+      />
+      <table border="1">
+        <thead>
+          <tr>
+            <th id="id">ID</th>
+            <th id="name">姓名</th>
+            <th id="sex">性别</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item,index) in items" :key="item.id">
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.sex}}</td>
+            <td>
+              <button @click="btn(index)">删除</button>
+              <button @click="btn(item,index)">编辑</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div v-for="item in searchResult" :key="item.id">
+        {{ item.name }} - {{ item.sex }}
+      </div>
+    </div>
+  </body>
+  <script src="../common/vue.js"></script>
+  <script>
+    new Vue({
+      el: "#app",
+      data() {
+        return {
+          valsex: "",
+          valname: "",
+          search: "",
+          index: 0,
+          items: [
+            { id: 1, name: "san", sex: "男" },
+            { id: 2, name: "李四", sex: "女" },
+            { id: 3, name: "王五", sex: "女" },
+            { id: 4, name: "赵六", sex: "男" },
+          ],
+        };
+      },
+      computed: {
+        searchResult() {
+          return this.items.filter((item) => item.name.includes(this.search));
+        },
+      },
+      methods: {
+        btn(index) {
+          this.items.splice(index, 1);
+          console.log(this.items);
+        },
+        btnadd() {
+          let data = {
+            id: this.items.length + 1,
+            name: this.valname,
+            sex: this.valsex,
+          };
+          this.items.push(data);
+        },
+        btn(item, index) {
+          this.valname = item.name;
+          this.valsex = item.sex;
+          this.index = index;
+        },
+        btnuta(index) {
+          this.items[this.index].name = this.valname;
+          this.items[this.index].sex = this.valsex;
+          this.valname = "";
+          this.valsex = "";
+        },
+        handleEnter() {
+          let ser = this.items.filter((item) => {
+            return this.search == item.name;
+          });
+          console.log(ser);
+        },
+      },
+    });
+  </script>
+</html>
