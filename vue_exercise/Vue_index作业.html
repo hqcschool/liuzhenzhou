@@ -20,15 +20,8 @@
       tr th:nth-child(1) input {
         vertical-align: middle;
       }
-      .even {
-        background-color: #eef11c;
-      }
-
-      .odd {
-        background-color: #ee710b;
-      }
       .hovered {
-        background-color: rgb(239, 67, 4);
+        background-color: rgb(5, 5, 5) !important;
       }
     </style>
   </head>
@@ -71,10 +64,10 @@
           <tr
             v-for="(item,index) in items"
             :key="item.id"
-            :class="{even: index % 2 === 0, odd: index % 2 !== 0 }"
-            :class="{hovered:ishovered}"
-            @mouseover="setHovered(item, true)"
-            @mouseout="setHovered(item, false)"
+            :style="index%2==0?even:odd"
+            :class="serv==index?'hovered':''"
+            @mouseover="setHovered(index)"
+            @mouseout="setHovereds"
           >
             <td>
               <input
@@ -127,11 +120,13 @@
         el: "#app",
         data: {
           che_state: "",
-          ishovered: false,
+          serv: -1,
           sel: "请选择一种性别",
           field: "请选择一排序字段",
           sort_list: "请选择一排序方式",
           valname: "",
+          even: "background-color: #eef11c",
+          odd: "background-color: #ee710b",
           ages: "100",
           chec_all: false,
           items: showList,
@@ -184,14 +179,11 @@
               this.items.splice(index + 1, 0, temp);
             }
           },
-          setHovered(item, value) {
-            item.hovered = value;
-            console.log(this.ishovered);
-            if (item.hovered == true) {
-              this.ishovered = true;
-            } else {
-              this.ishovered = false;
-            }
+          setHovereds() {
+            this.serv = -1;
+          },
+          setHovered(index) {
+            this.serv = index;
           },
         },
       });
