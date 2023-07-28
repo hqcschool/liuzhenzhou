@@ -61,6 +61,62 @@
           opacity: 1;
         }
       }
+      .fade-in {
+        -webkit-animation: slide-in-left 0.8s;
+        animation: slide-in-left 0.8s;
+      }
+      @-webkit-keyframes fade-in {
+        0% {
+          -webkit-transform: translateX(-1000px);
+          transform: translateX(-1000px);
+          opacity: 0;
+        }
+        100% {
+          -webkit-transform: translateX(0);
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes fade-in {
+        0% {
+          -webkit-transform: translateX(-1000px);
+          transform: translateX(-1000px);
+          opacity: 0;
+        }
+        100% {
+          -webkit-transform: translateX(0);
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      .bounce-in {
+        -webkit-animation: slide-in-left 1s;
+        animation: slide-in-left 1s;
+      }
+      @-webkit-keyframes bounce-in {
+        0% {
+          -webkit-transform: translateX(-1000px);
+          transform: translateX(-1000px);
+          opacity: 0;
+        }
+        100% {
+          -webkit-transform: translateX(0);
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes bounce-in {
+        0% {
+          -webkit-transform: translateX(-1000px);
+          transform: translateX(-1000px);
+          opacity: 0;
+        }
+        100% {
+          -webkit-transform: translateX(0);
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body>
@@ -68,7 +124,8 @@
       <div
         v-for="(item,index) in connect"
         :key="index"
-        class="bos_a slide-in-left"
+        class="bos_a"
+        :class="item.animationClass"
       >
         <a :href="item.url">{{item.name}}</a>
       </div>
@@ -82,14 +139,17 @@
             {
               name: "vue练习题",
               url: "../home_htmls/home.html",
+              animationClass: "slide-in-left",
             },
             {
               name: "7-28考试题",
               url: "../home_htmls/home.html",
+              animationClass: "fade-in",
             },
             {
               name: "11",
               url: "../home_htmls/home.html",
+              animationClass: "bounce-in",
             },
           ],
         },

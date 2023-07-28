@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ks</title>
+    <link rel="stylesheet" href="./css/my.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div id="box">
+        <div
+          v-for="(item,index) in list"
+          :key="item.id"
+          @dblclick="fun(item.id)"
+        >
+          <img :src="item.img_u" width="240px" height="225px" />
+          <span class="span_1">{{item.state}}</span
+          ><span class="span_2"
+            >￥{{Math.floor(item.cost*(item.discount*0.1))}}</span
+          >
+          <span class="span_3"
+            ><del>￥{{item.cost}}</del>&nbsp;{{item.discount}}折</span
+          >
+          <div class="text_p">
+            <p class="p_1">{{item.brief}}</p>
+          </div>
+        </div>
+      </div>
+      <div id="bos">
+        <div class="headline">
+          <span>特卖商品 <span>19:18</span></span>
+        </div>
+        <div class="navigation">
+          <div>商品</div>
+          <div>单价</div>
+          <div>数量</div>
+          <div>操作</div>
+        </div>
+        <div class="shop">唯品自营</div>
+        <div class="form_list">
+          <div
+            class="join_trolley"
+            v-for="(item,index) in data_v"
+            :key="item.id"
+          >
+            <input
+              type="checkbox"
+              class="che_a"
+              v-model="item.state"
+              @change="che_All"
+            />
+            <img :src="item.img_u" width="120px" height="120px" />
+            <div class="introdu">{{item.brief}}</div>
+            <div class="price">
+              <span
+                >￥{{Math.floor(item.cost*(item.discount*0.1)*item.num)}}</span
+              >
+            </div>
+            <div class="quantity">
+              <div>
+                <button @click="tract_quantity(item.id)">-</button>
+                <button>{{item.num}}</button>
+                <button @click="add_quantity(item.id)">+</button>
+              </div>
+            </div>
+            <div class="del">
+              <a href="#" @click.prevent="del_list(index)">删除</a>
+            </div>
+          </div>
+        </div>
+        <div class="close">
+          <select name="" id="" class="sel" v-model="sel" @change="select_v">
+            <option value="使用优惠劵">使用优惠劵</option>
+            <option value="100">100</option>
+            <option value="150">150</option>
+            <option value="688">688</option>
+          </select>
+          <div class="subtotal">
+            <span>
+              共
+              <span class="subtotal_1" :class="subtotal_1">{{subtotal_1}}</span>
+              件商品 商品金额 &emsp;&emsp;<span
+                class="subtotal_2"
+                :class="subtotal_2"
+                >￥{{subtotal_2}}</span
+              >
+            </span>
+            <span
+              >总金额 (未含运费) &nbsp;&emsp;&emsp;&emsp;<span
+                class="subtotal_3"
+                :class="subtotal_3"
+                >￥{{subtotal_3}}</span
+              ></span
+            >
+          </div>
+          <div class="aggregate">
+            <button>立即结算<span>19:18</span></button>
+            <p>请在倒计时结束前结算</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../common/vue.js"></script>
+    <script>
+      let vm = new Vue({
+        el: "#app",
+        data: {
+          list: [
+            {
+              id: 1,
+              img_u:
+                "https://h2.appsimg.com/a.appsimg.com/upload/merchandise/pdcvop/00618741/10007290/1963178305-3894002118380957696-3894002118380957698-1_353x353_90.jpg",
+              state: "特卖价",
+              cost: 689,
+              discount: 2.9,
+              brief:
+                "【新中国改良汉服旗袍连衣群】啊灯具市场v和v干啥VS个VS和v抽卡句",
+              inventory: 10,
+              num: 0,
+              state: false,
+            },
+            {
+              id: 2,
+              img_u:
+                "https://h2.appsimg.com/a.appsimg.com/upload/merchandise/pdcvis/2022/04/28/178/e94be0ae-281b-46a9-bb20-aed368a9f1a8_353x353_90.jpg",
+              state: "特卖价",
+              cost: 896,
+              discount: 2.2,
+              brief: "啊灯具市场v和v干啥VS个VS和v抽卡句",
+              inventory: 10,
+              num: 0,
+              state: false,
+            },
+            {
+              id: 3,
+              img_u:
+                "https://h2.appsimg.com/a.appsimg.com/upload/merchandise/pdcvis/2022/12/24/117/b4d5cf92-f0d1-4b24-a108-520f481e4691_353x353_90.jpg",
+              state: "特卖价",
+              cost: 689,
+              discount: 2.7,
+              brief:
+                "【新中式改良旗袍假两件】啊灯具市场v和v干啥VS个VS和v抽卡句",
+              inventory: 10,
+              num: 0,
+              state: false,
+            },
+            {
+              id: 4,
+              img_u:
+                "https://h2.appsimg.com/a.appsimg.com/upload/merchandise/pdcvis/2023/05/24/112/83b2a19c-b9d6-4e36-88b4-d05abe5c9005_353x353_90.jpg",
+              state: "特卖价",
+              cost: 1089,
+              discount: 2.9,
+              brief: "山东科技发货的商量好入库是萨芬收款方v否",
+              inventory: 10,
+              num: 0,
+              state: false,
+            },
+            {
+              id: 5,
+              img_u:
+                "https://h2.appsimg.com/a.appsimg.com/upload/merchandise/pdcvis/2023/04/07/111/eff1e715-3b2d-45d6-9ddf-fd020410ac5e_353x353_90.jpg",
+              state: "特卖价",
+              cost: 1076,
+              discount: 2.3,
+              brief: "数量肯德基给客人提u我v和开发环境输入法预算",
+              inventory: 10,
+              num: 0,
+              state: false,
+            },
+            {
+              id: 6,
+              img_u:
+                "https://h2.appsimg.com/a.appsimg.com/upload/merchandise/pdcvis/2023/04/20/82/491b75e6-78dc-4dac-a799-8033908e6220_353x353_90.jpg",
+              state: "特卖价",
+              cost: 1416,
+              discount: 2.8,
+              brief: "睡个觉个算了然后就几节课",
+              inventory: 10,
+              num: 0,
+              state: false,
+            },
+            {
+              id: 7,
+              img_u:
+                "https://h2.appsimg.com/a.appsimg.com/upload/merchandise/pdcvis/2023/05/16/98/cb88bd3e-2aea-452e-9514-850eda90a10c_353x353_90.jpg",
+              state: "特卖价",
+              cost: 969,
+              discount: 2.9,
+              brief: "in方式四大皆空个u更黑估计额偶加工来吧乳房健康逛逛街",
+              inventory: 10,
+              num: 0,
+              state: false,
+            },
+            {
+              id: 8,
+              img_u:
+                "https://h2.appsimg.com/a.appsimg.com/upload/merchandise/pdcvis/2022/05/05/142/54fafb30-3fc5-451e-b2d4-8923e0b49b7b_353x353_90.jpg",
+              state: "特卖价",
+              cost: 1999,
+              discount: 1.4,
+              brief:
+                "【新中国改良汉服旗袍连衣群】啊灯具市场v和v干啥VS个VS和v抽卡句",
+              inventory: 10,
+              num: 0,
+              state: false,
+            },
+          ],
+          data_v: [],
+          subtotal_1: 0,
+          subtotal_2: 0,
+          subtotal_3: 0,
+          sel: "",
+        },
+        methods: {
+          fun(id) {
+            let ser = this.list.find((item) => item.id === id);
+            if (ser.inventory != 0) {
+              ser.num++;
+              ser.inventory--;
+            } else {
+              alert("库存不足");
+            }
+            if (!this.data_v.some((item) => item.id === ser.id)) {
+              this.data_v.push(ser);
+            }
+            this.subtotal_1 = this.data_v.length;
+            let a = 0;
+            this.data_v.forEach((item) => {
+              a += Math.floor(item.cost * (item.discount * 0.1)) * item.num;
+            });
+            this.subtotal_2 = a;
+            this.subtotal_3 = a;
+          },
+          tract_quantity(id) {
+            let str_v = this.data_v.find((item) => item.id === id);
+            if (str_v.inventory != 10) {
+              str_v.num--;
+              str_v.inventory++;
+            } else {
+              alert("至少一件");
+            }
+            let a = 0;
+            this.data_v.forEach((item) => {
+              a += Math.floor(item.cost * (item.discount * 0.1)) * item.num;
+            });
+            this.subtotal_2 = a;
+            this.subtotal_3 = a;
+          },
+          add_quantity(id) {
+            let str = this.data_v.find((item) => item.id === id);
+            if (str.inventory != 0) {
+              str.num++;
+              str.inventory--;
+            } else {
+              alert("库存不足");
+            }
+            let a = 0;
+            this.data_v.forEach((item) => {
+              a += Math.floor(item.cost * (item.discount * 0.1)) * item.num;
+            });
+            this.subtotal_2 = a;
+            this.subtotal_3 = a;
+          },
+          del_list(index) {
+            (this.data_v[index].inventory = 10), (this.data_v[index].num = 0);
+            this.data_v.splice(index, 1);
+            this.subtotal_1 = this.data_v.length;
+            let a = 0;
+            this.data_v.forEach((item) => {
+              a += Math.floor(item.cost * (item.discount * 0.1)) * item.num;
+              console.log(a);
+            });
+            this.subtotal_2 = a;
+            this.subtotal_3 = a;
+          },
+          select_v() {
+            let sel = Number(this.sel);
+            let a = 0;
+            this.data_v.forEach((item) => {
+              a += Math.floor(item.cost * (item.discount * 0.1)) * item.num;
+              console.log(a);
+            });
+            this.subtotal_2 = a - sel;
+            this.subtotal_3 = a - sel;
+          },
+          che_All() {
+            console.log(this.data_v);
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
