@@ -15,7 +15,7 @@
           @dblclick="fun(item.id)"
         >
           <img :src="item.img_u" width="240px" height="225px" />
-          <span class="span_1">{{item.state}}</span
+          <span class="span_1">{{item.states}}</span
           ><span class="span_2"
             >￥{{Math.floor(item.cost*(item.discount*0.1))}}</span
           >
@@ -111,7 +111,7 @@
               id: 1,
               img_u:
                 "https://h2.appsimg.com/a.appsimg.com/upload/merchandise/pdcvop/00618741/10007290/1963178305-3894002118380957696-3894002118380957698-1_353x353_90.jpg",
-              state: "特卖价",
+              states: "特卖价",
               cost: 689,
               discount: 2.9,
               brief:
@@ -235,11 +235,13 @@
           },
           tract_quantity(id) {
             let str_v = this.data_v.find((item) => item.id === id);
-            if (str_v.inventory != 10) {
+            if (str_v.inventory <= 8) {
               str_v.num--;
               str_v.inventory++;
+              console.log(str_v.inventory);
             } else {
               alert("至少一件");
+              console.log(str_v.inventory);
             }
             let a = 0;
             this.data_v.forEach((item) => {
