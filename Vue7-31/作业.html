@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>zuo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      li {
+        list-style: none;
+      }
+      a {
+        text-decoration: none;
+        color: rgb(204, 154, 154);
+      }
+      body {
+        width: 100%;
+        height: 100%;
+        background-color: rgb(245, 245, 245);
+      }
+      #list {
+        width: 550px;
+        height: 100vh;
+        margin: 0 auto;
+      }
+      .p_1 {
+        font-size: 100px;
+        text-align: center;
+        color: rgba(242, 185, 178, 0.6);
+      }
+      #import {
+        outline: none;
+        display: block;
+        width: 500px;
+        height: 60px;
+        font-size: 30px;
+        padding-left: 50px;
+        font-family: "幼圆";
+        border: none;
+        box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.6);
+      }
+      #import::placeholder {
+        color: rgba(0, 0, 0, 0.2);
+        font-style: italic;
+      }
+      .ul_v {
+        width: 550px;
+        min-height: 0px;
+      }
+      .ul_v li {
+        width: 550px;
+        height: 60px;
+        font-size: 30px;
+        font-family: "幼圆";
+        box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.6);
+        background-color: #fff;
+        color: #000;
+        cursor: pointer;
+      }
+      .che {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 2px solid #333;
+        outline: none;
+        margin: 15px;
+        float: left;
+      }
+      .che:checked {
+        background-color: #333;
+        border-color: #333;
+      }
+      .che:checked::before {
+        display: block;
+        text-align: center;
+        line-height: 20px;
+        color: #fff;
+      }
+      .ul_v li span {
+        height: 60px;
+        line-height: 60px;
+        float: left;
+      }
+      .ul_v li a {
+        float: right;
+        margin: 13px 10px;
+        display: none;
+      }
+      .ul_v li:hover a {
+        display: block;
+      }
+      .footer {
+        width: 550px;
+        height: 50px;
+        background-color: #fff;
+        box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.1);
+      }
+      .todo-count {
+        float: left;
+        line-height: 50px;
+        margin: 0 60px 0 30px;
+      }
+      .filters {
+        float: left;
+        display: flex;
+        width: 210px;
+        line-height: 50px;
+      }
+      .filters li {
+        margin: 0 10px;
+      }
+      .filters li a {
+        color: rgb(119, 119, 141);
+      }
+      .eee {
+        text-decoration: line-through;
+        color: rgba(0, 0, 0, 0.6);
+      }
+      .clear-completed {
+        float: left;
+        height: 30px;
+        margin: 10px;
+      }
+    </style>
+    <script src="../common/vue.js"></script>
+  </head>
+  <body>
+    <div id="list">
+      <p class="p_1">todos</p>
+      <input
+        type="text"
+        name=""
+        id="import"
+        placeholder="What needs to be done ?"
+        v-model="datalist"
+        @keyup.enter="add"
+      />
+      <ul class="ul_v">
+        <li v-for="(item,index) in items" :key="index">
+          <input
+            type="checkbox"
+            class="che"
+            @change="chec(index)"
+            v-model="item.state"
+          />
+          <span :class="item.state?'eee':''">{{item.name}}</span>
+          <a href="#" @click="del(index)">×</a>
+        </li>
+      </ul>
+      <footer class="footer" v-show="items.length!=0">
+        <span class="todo-count"><strong>{{figure}}</strong> item left </span>
+        <ul class="filters">
+          <li><a href="#" class="selected" @click="selected">All</a></li>
+          <li><a href="#" class="active" @click="active">Active</a></li>
+          <li><a href="#" class="" @click="completed">Completed</a></li>
+        </ul>
+        <button class="clear-completed" @click="clear_comp">
+          Clear completed
+        </button>
+      </footer>
+    </div>
+    <script>
+      new Vue({
+        el: "#list",
+        data: {
+          items: [],
+          figure: 0,
+          datalist: "",
+          fotei: false,
+        },
+        mounted() {
+          const storedData = localStorage.getItem("mem");
+          if (storedData) {
+            this.items = JSON.parse(storedData);
+            console.log(this.items);
+            let v = this.items.filter((item) => {
+              return item.state == false;
+            });
+            this.figure = v.length;
+          }
+        },
+        methods: {
+          //添加
+          add() {
+            let item = {
+              name: this.datalist.trim(),
+              state: false,
+            };
+            this.items.push(item);
+            this.datalist = "";
+            localStorage.setItem("mem", JSON.stringify(this.items));
+            this.figure = this.items.length;
+            // if () {
+            //   this.fotei = true;
+            // }
+          },
+          //删除
+          del(index) {
+            this.items.splice(index, 1);
+            localStorage.setItem("mem", JSON.stringify(this.items));
+            this.figure = this.items.length;
+          },
+          //全部All
+          selected() {
+            this.items = JSON.parse(localStorage.getItem("mem"));
+          },
+          //复选框
+          chec(index) {
+            this.items.forEach((item) => {
+              localStorage.setItem("mem", JSON.stringify(this.items));
+            });
+            let m = JSON.parse(localStorage.getItem("mem"));
+            let am = m.filter((item) => {
+              return item.state === false;
+            });
+            this.figure = am.length;
+          },
+          //未完成
+          active() {
+            let m = JSON.parse(localStorage.getItem("mem"));
+            let am = m.filter((item) => {
+              return item.state === false;
+            });
+            console.log(am);
+            this.items = am;
+            this.figure = am.length;
+          },
+          //已完成
+          completed() {
+            let m = JSON.parse(localStorage.getItem("mem"));
+            let am = m.filter((item) => {
+              return item.state === true;
+            });
+            console.log(am);
+            this.items = am;
+          },
+          //销毁
+          clear_comp() {
+            let m = JSON.parse(localStorage.getItem("mem"));
+            let am = m.filter((item) => {
+              return item.state === false;
+            });
+            console.log(am);
+            this.items = am;
+            localStorage.setItem("mem", JSON.stringify(this.items));
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

