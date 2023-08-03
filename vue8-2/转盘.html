@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>抽奖</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      li {
+        list-style: none;
+      }
+      body {
+        background-color: aqua;
+      }
+      .bos {
+        width: 500px;
+        height: 500px;
+        margin: 100px auto;
+        animation: changeBg 0.5s ease infinite;
+        overflow: hidden;
+        padding: 20px;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+      @keyframes changeBg {
+        0% {
+          background-image: url("./k1.png");
+        }
+        100% {
+          background-image: url("./k2.png");
+        }
+      }
+      .bos-con {
+        height: 470px;
+        width: 470px;
+        position: relative;
+        margin-top: 10px;
+        margin-left: 15px;
+      }
+      ul {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .raffle {
+        width: 130px;
+        height: 130px;
+        margin: 10px 13px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 5px 1px rgb(156, 210, 255);
+      }
+      .raffle2 {
+        background-color: rgb(255, 58, 89);
+        box-shadow: 0px 5px 1px rgba(255, 58, 89, 0.6);
+      }
+      .raffle span {
+        display: block;
+        text-align: center;
+        margin: 15px;
+        color: rgb(153, 138, 191);
+      }
+      .raffle1 {
+        background-color: rgb(255, 58, 89);
+        border-radius: 8px;
+        box-shadow: 0px 5px 1px rgba(255, 58, 89, 0.6);
+        cursor: pointer;
+      }
+      .raffle1 span:nth-child(1) {
+        font-size: 50px;
+        margin: 15px;
+        font-weight: bold;
+        color: #fff;
+      }
+      .raffle1 span:nth-child(2) {
+        display: block;
+        text-align: center;
+        margin: 15px;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="bos">
+        <div class="bos-con">
+          <ul>
+            <li
+              v-for="(item,index) in showList.slice(0,4)"
+              :key="item.id"
+              class="raffle"
+              :class="item.state?'raffle2':''"
+            >
+              <span>{{item.name}}</span>
+            </li>
+            <li class="raffle raffle1" @click="begin">
+              <span>抽奖</span>
+              <span>消耗10积分</span>
+            </li>
+            <li
+              v-for="(item,index) in showList.slice(4,8)"
+              :key="item.id"
+              class="raffle"
+              :class="item.state?'raffle2':''"
+            >
+              <span>{{item.name}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script src="../common/vue.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          showList: [
+            {
+              id: 1,
+              name: "谢谢参与",
+              state: false,
+            },
+            {
+              id: 2,
+              name: "谢谢参与",
+              state: false,
+            },
+            {
+              id: 3,
+              name: "谢谢参与",
+              state: false,
+            },
+            {
+              id: 8,
+              name: "谢谢参与",
+              state: false,
+            },
+            {
+              id: 4,
+              name: "谢谢参与",
+              state: false,
+            },
+            {
+              id: 7,
+              name: "谢谢参与",
+              state: false,
+            },
+            {
+              id: 6,
+              name: "谢谢参与",
+              state: false,
+            },
+            {
+              id: 5,
+              name: "人头一个",
+              state: false,
+            },
+          ],
+          fantastical: 0,
+          cjflag: true,
+          intervalId: null,
+          a: 0,
+          b: 0,
+        },
+        methods: {
+          begin() {
+            if (this.cjflag) {
+              this.a = this.numfun();
+              console.log(this.a);
+              this.cjflag = true;
+              if (!this.intervalId) {
+                this.intervalId = setInterval(() => {
+                  this.fantastical++;
+                  this.b++;
+                  //   console.log(this.b);
+                  if (this.fantastical >= this.showList.length + 1) {
+                    this.fantastical = 1;
+                  }
+                  if (this.b == this.a) {
+                    this.b = 0;
+                    clearInterval(this.intervalId);
+                    this.intervalId = null;
+                    console.log(this.showList[this.fantastical]);
+                    setTimeout(() => {
+                      alert(this.showList[this.fantastical].name);
+                    }, 1000);
+                  }
+                }, 500);
+              }
+              //   setTimeout(() => {
+              //     clearInterval(this.intervalId);
+              //     console.log(this.fantastical);
+              //     if ((this.fantastical = 5)) {
+              //       this.intervalId = null;
+              //     } else {
+              //       this.intervalId = 5;
+              //     }
+              //   }, 1000);
+            }
+          },
+          numfun() {
+            const randomNum = Math.random() * 4;
+            const result = randomNum + 8;
+            return Math.floor(result);
+          },
+        },
+        watch: {
+          fantastical(newVal) {
+            // console.log(newVal);
+            this.showList.forEach((item) => {
+              if (item.id == newVal) {
+                item.state = true;
+              } else {
+                item.state = false;
+              }
+            });
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

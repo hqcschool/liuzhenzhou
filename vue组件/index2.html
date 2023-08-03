@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="root">
+      <banner></banner>
+    </div>
+    <script src="../common/vue.js"></script>
+    <script>
+      const banner = Vue.extend({
+        template: `<div>
+                   <div 
+                      class="bos"
+                   >
+                      <img :src="carousel">
+                      <div class="perv" @click="perv(index)"></div>
+                      <div class="next" @click="next(index)"></div>
+                    </div>
+                </div>`,
+        data() {
+          return {
+            list: [
+              "https://p0.ssl.qhimgs1.com/sdr/400__/t0189d6e580cb9620ce.jpg",
+              "https://p3.ssl.qhimgs1.com/sdr/400__/t01d6edeb99118d998d.jpg",
+              "https://p2.ssl.qhimgs1.com/sdr/400__/t012df7612e645e3c88.jpg",
+              "https://p2.ssl.qhimgs1.com/sdr/400__/t01de3015e09fd87ee2.jpg",
+              "https://p3.ssl.qhimgs1.com/sdr/400__/t018dd015a947aaa5b9.jpg",
+            ],
+            index: 0,
+          };
+        },
+        computed: {
+          carousel() {
+            return this.list[this.index];
+          },
+        },
+        mounted() {
+          this.startCarousel();
+        },
+        methods: {
+          startCarousel() {
+            setInterval(this.next, 2000);
+          },
+          perv() {
+            this.index = (this.index - 1 + this.list.length) % this.list.length;
+          },
+          next() {
+            this.index = (this.index + 1) % this.list.length;
+          },
+        },
+      });
+      new Vue({
+        el: "#root",
+        components: { banner },
+      });
+    </script>
+  </body>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .bos img {
+      width: 400px;
+      height: 300px;
+    }
+    .perv,
+    .next {
+      width: 60px;
+      height: 40px;
+      border: 1px solid #000;
+    }
+  </style>
+</html>

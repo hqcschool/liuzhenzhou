@@ -127,12 +127,21 @@
         height: 30px;
         margin: 10px;
       }
+      .spanv {
+        color: #fff !important;
+      }
+      .spans {
+        cursor: pointer;
+      }
     </style>
     <script src="../common/vue.js"></script>
   </head>
   <body>
     <div id="list">
       <p class="p_1">todos</p>
+      <span class="spans" :class="this.cheAlls?'spanv':''" @click="cheAll"
+        >▼</span
+      >
       <input
         type="text"
         name=""
@@ -153,14 +162,18 @@
           <a href="#" @click="del(index)">×</a>
         </li>
       </ul>
-      <footer class="footer" v-show="items.length!=0">
+      <footer class="footer" v-show="this.figureAll!=0">
         <span class="todo-count"><strong>{{figure}}</strong> item left </span>
         <ul class="filters">
           <li><a href="#" class="selected" @click="selected">All</a></li>
           <li><a href="#" class="active" @click="active">Active</a></li>
           <li><a href="#" class="" @click="completed">Completed</a></li>
         </ul>
-        <button class="clear-completed" @click="clear_comp">
+        <button
+          class="clear-completed"
+          @click="clear_comp"
+          v-show="this.appear!=0"
+        >
           Clear completed
         </button>
       </footer>
@@ -172,7 +185,9 @@
           items: [],
           figure: 0,
           datalist: "",
-          fotei: false,
+          figureAll: 0,
+          appear: 0,
+          cheAlls: false,
         },
         mounted() {
           const storedData = localStorage.getItem("mem");
@@ -183,6 +198,23 @@
               return item.state == false;
             });
             this.figure = v.length;
+            this.figureAll = v.length;
+            let amv = this.items.filter((item) => {
+              return item.state === true;
+            });
+            this.appear = amv.length;
+            console.log(this.cheAlls);
+            let num = 0;
+            this.items.forEach((item) => {
+              if (item.state === true) {
+                num++;
+              }
+            });
+            if (num === this.items.length) {
+              this.cheAlls = true;
+            } else {
+              this.cheAlls = false;
+            }
           }
         },
         methods: {
@@ -196,15 +228,18 @@
             this.datalist = "";
             localStorage.setItem("mem", JSON.stringify(this.items));
             this.figure = this.items.length;
-            // if () {
-            //   this.fotei = true;
-            // }
+            this.figureAll = this.items.length;
           },
           //删除
           del(index) {
             this.items.splice(index, 1);
             localStorage.setItem("mem", JSON.stringify(this.items));
             this.figure = this.items.length;
+            this.figureAll = this.items.length;
+            let amv = this.items.filter((item) => {
+              return item.state === true;
+            });
+            this.appear = amv.length;
           },
           //全部All
           selected() {
@@ -220,6 +255,10 @@
               return item.state === false;
             });
             this.figure = am.length;
+            let amv = m.filter((item) => {
+              return item.state === true;
+            });
+            this.appear = amv.length;
           },
           //未完成
           active() {
@@ -249,6 +288,20 @@
             console.log(am);
             this.items = am;
             localStorage.setItem("mem", JSON.stringify(this.items));
+            this.figureAll = this.items.length;
+            let amv = this.items.filter((item) => {
+              return item.state === true;
+            });
+            this.appear = amv.length;
+          },
+          cheAll() {
+            this.cheAlls = !this.cheAlls;
+            console.log(this.cheAlls);
+            this.items.forEach((item) => {
+              item.state = this.cheAlls;
+            });
+            this.figureAll = this.items.length;
+            console.log(this.figureAll);
           },
         },
       });
